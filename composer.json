@@ -1,0 +1,12 @@
+{
+    "name": "mirthe/setlist",
+    "description": "Shows setlist from Setlist.fm for show ID",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mirthe Valentijn",
+            "email": "me@Mirthe.org"
+        }
+    ]
+}
