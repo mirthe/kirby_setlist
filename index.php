@@ -45,7 +45,7 @@ Kirby::plugin('mirthe/setlist', [
                 
                 foreach ($setlistjson['sets'] as $sets) {
                     if( count($sets) > 0){
-                        $mijnoutput .= "<ul>";
+                        $mijnoutput .= "<ul class=\"setlist\">";
                         for($i = 0; $i < count($sets); $i++) {
                             $liedjes = $sets[$i]['song'];
                             for($j = 0; $j < count($liedjes); $j++) {
