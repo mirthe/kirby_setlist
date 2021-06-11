@@ -20,7 +20,7 @@ Placed for example with
 
     (setlist: show: 398b9b7)
 
-(image: example.png)
+<img src="https://github.com/mirthe/kirby_setlist/blob/986f02a9c381b5e8cff678ba98022ed0bcafbba9/example.png" alt="Example of usage">
 
 ## Todo
 
