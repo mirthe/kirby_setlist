@@ -1,7 +1,9 @@
 {
     "name": "mirthe/setlist",
     "description": "Shows setlist from Setlist.fm for show ID",
-    "version": "1.0.0",
+    "homepage": "https://github.com/mirthe/kirby_setlist",
+    "keywords": ["kirby-plugin", "setlist.fm", "photography", "grid"],
+    "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
         {
