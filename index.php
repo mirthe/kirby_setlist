@@ -38,7 +38,7 @@ Kirby::plugin('mirthe/setlist', [
                 
                 $setlistjson = json_decode($rawdata,true);
                 
-                $mijnoutput = '<div class="well">' ."\n";
+                $mijnoutput = '<div class="well well--clean">' ."\n";
                 $mijnoutput .= '<p><a href="'.$setlistjson['url'].'" title="Bekijken op Setlist.fm">'.$setlistjson['artist']['name']."</a>";
                 $mijnoutput .= " in ".$setlistjson['venue']['name']." (".$setlistjson['venue']['city']['name'].")";
                 $mijnoutput .= " op ". $setlistjson['eventDate'].":</p>\n";
