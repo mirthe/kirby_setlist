@@ -25,3 +25,4 @@ Placed for example with
 ## Todo
 
 - Offer as an official Kirby plugin
+- Add translations for labels
