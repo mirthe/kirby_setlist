@@ -28,6 +28,7 @@ Kirby::plugin('mirthe/setlist', [
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_USERAGENT, $site->title());
                 $rawdata = curl_exec($ch);
                 curl_close($ch);
                 
