@@ -17,6 +17,8 @@ Kirby::plugin('mirthe/setlist', [
                 'show'
             ],
             'html' => function($tag) {
+                
+                $site = kirby()->site();
 
                 $showid = $tag->show;
                 $api_key = option('setlistfm.apiKey');
