@@ -1,72 +1,68 @@
-<?php
-
-// TODO opschonen en aanbieden?
-// https://getkirby.com/docs/guide/plugins/best-practices
-
-// TODO Aparte git repo of submodule van maken?
-
-// zie https://api.setlist.fm/docs/1.0/resource__1.0_setlist__setlistId_.html
-
-Kirby::plugin('mirthe/setlist', [
+<?php Kirby::plugin('mirthe/setlist', [
     'options' => [
         'cache' => true
     ],
     'tags' => [
         'setlist' => [
-            'attr' =>[
+            'attr' => [
                 'show'
             ],
             'html' => function($tag) {
-                
                 $showid = $tag->show;
                 $api_key = option('setlistfm.apiKey');
-               
-                $url = "https://api.setlist.fm/rest/1.0/setlist/" . $showid;
-                $headers = array(
-                    'x-api-key: '.$api_key, 
-                    'Accept: application/json');
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                curl_setopt($ch, CURLOPT_USERAGENT, kirby()->site()->title());
-                $rawdata = curl_exec($ch);
-                curl_close($ch);
-                
-                // print_r($rawdata);
-                // exit();
 
-                // TODO nog iets met lastFmEventId?
-                
-                $setlistjson = json_decode($rawdata,true);
-                
-                $mijnoutput = '<div class="well well--clean">' ."\n";
-                $mijnoutput .= '<p><a href="'.$setlistjson['url'].'" title="Bekijken op Setlist.fm">'.$setlistjson['artist']['name']."</a>";
-                $mijnoutput .= " in ".$setlistjson['venue']['name']." (".$setlistjson['venue']['city']['name'].")";
-                $mijnoutput .= " op ". $setlistjson['eventDate'].":</p>\n";
-                
+                $cache = kirby()->cache('mirthe.setlist');
+                $cacheKey = 'setlist-' . $showid;
+                $setlistjson = $cache->get($cacheKey);
+
+                if ($setlistjson === null) {
+                    $url = "https://api.setlist.fm/rest/1.0/setlist/" . $showid;
+                    $headers = [
+                        'x-api-key: ' . $api_key,
+                        'Accept: application/json'
+                    ];
+
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                    curl_setopt($ch, CURLOPT_USERAGENT, kirby()->site()->title());
+                    $rawdata = curl_exec($ch);
+                    curl_close($ch);
+
+                    $setlistjson = json_decode($rawdata, true);
+                    $cache->set($cacheKey, $setlistjson, 604800);
+                }
+
+                if (empty($setlistjson) || !is_array($setlistjson) || isset($setlistjson['error'])) {
+                    return '<div class="well well--clean"><div class="well-body">Setlist niet gevonden</div></div>';
+                }
+
+                $mijnoutput = '<div class="well well--clean">' . "\n";
+                $mijnoutput .= '<p><a href="'.($setlistjson['url'] ?? '#').'" title="Bekijken op Setlist.fm">'.htmlspecialchars($setlistjson['artist']['name'] ?? '', ENT_QUOTES)."</a>";
+                $mijnoutput .= ' in '.htmlspecialchars($setlistjson['venue']['name'] ?? '', ENT_QUOTES).' ('.htmlspecialchars($setlistjson['venue']['city']['name'] ?? '', ENT_QUOTES).')';
+                $mijnoutput .= ' op '.htmlspecialchars($setlistjson['eventDate'] ?? '', ENT_QUOTES).':</p>' . "\n";
+
                 foreach ($setlistjson['sets'] as $sets) {
-                    if( count($sets) > 0){
-                        $mijnoutput .= "<ul class=\"songs\">";
-                        for($i = 0; $i < count($sets); $i++) {
-                            $liedjes = $sets[$i]['song'];
-                            for($j = 0; $j < count($liedjes); $j++) {
-                                if ($liedjes[$j]['name'] !== ''){
-                                    $mijnoutput .= '<li>'. ($liedjes[$j]['name']) . "</li>";
+                    if (count($sets) > 0) {
+                        $mijnoutput .= '<ul class="songs">';
+                        for ($i = 0; $i < count($sets); $i++) {
+                            $liedjes = $sets[$i]['song'] ?? [];
+                            for ($j = 0; $j < count($liedjes); $j++) {
+                                if (!empty($liedjes[$j]['name'])) {
+                                    $mijnoutput .= '<li>'.htmlspecialchars($liedjes[$j]['name'], ENT_QUOTES)."</li>";
                                 }
                             }
                         }
                         $mijnoutput .= "</ul>\n";
-                    }
-                    else {
+                    } else {
                         $mijnoutput .= "<p><em>De setlist is (nog) niet ingevoerd.</em></p>\n";
                     }
                 }
-                $mijnoutput .= "</div>\n";
 
+                $mijnoutput .= "</div>\n";
                 return $mijnoutput;
             }
         ]
     ]
 ]);
 
-?>
