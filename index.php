@@ -2,6 +2,18 @@
     'options' => [
         'cache' => true
     ],
+    'translations' => [
+        'nl' => [
+            'mirthe.setlist.not-found' => 'Setlist niet gevonden',
+            'mirthe.setlist.view-on-setlist' => 'Bekijken op Setlist.fm',
+            'mirthe.setlist.no-setlist' => 'De setlist is (nog) niet ingevoerd.'
+        ],
+        'en' => [
+            'mirthe.setlist.not-found' => 'Setlist not found',
+            'mirthe.setlist.view-on-setlist' => 'View on Setlist.fm',
+            'mirthe.setlist.no-setlist' => 'The setlist has not been entered yet.'
+        ]
+    ],
     'tags' => [
         'setlist' => [
             'attr' => [
@@ -34,11 +46,11 @@
                 }
 
                 if (empty($setlistjson) || !is_array($setlistjson) || isset($setlistjson['error'])) {
-                    return '<div class="well well--clean"><div class="well-body">Setlist niet gevonden</div></div>';
+                    return '<div class="well well--clean"><div class="well-body">'.t('mirthe.setlist.not-found').'</div></div>';
                 }
 
                 $mijnoutput = '<div class="well well--clean">' . "\n";
-                $mijnoutput .= '<p><a href="'.($setlistjson['url'] ?? '#').'" title="Bekijken op Setlist.fm">'.htmlspecialchars($setlistjson['artist']['name'] ?? '', ENT_QUOTES)."</a>";
+                $mijnoutput .= '<p><a href="'.($setlistjson['url'] ?? '#').'" title="'.t('mirthe.setlist.view-on-setlist').'">'.htmlspecialchars($setlistjson['artist']['name'] ?? '', ENT_QUOTES)."</a>";
                 $mijnoutput .= ' in '.htmlspecialchars($setlistjson['venue']['name'] ?? '', ENT_QUOTES).' ('.htmlspecialchars($setlistjson['venue']['city']['name'] ?? '', ENT_QUOTES).')';
                 $mijnoutput .= ' op '.htmlspecialchars($setlistjson['eventDate'] ?? '', ENT_QUOTES).':</p>' . "\n";
 
@@ -55,7 +67,7 @@
                         }
                         $mijnoutput .= "</ul>\n";
                     } else {
-                        $mijnoutput .= "<p><em>De setlist is (nog) niet ingevoerd.</em></p>\n";
+                        $mijnoutput .= "<p><em>" . t('mirthe.setlist.no-setlist') . "</em></p>\n";
                     }
                 }
 
