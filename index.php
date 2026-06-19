@@ -26,8 +26,9 @@
                 $cache = kirby()->cache('mirthe.setlist');
                 $cacheKey = 'setlist-' . $showid;
                 $setlistjson = $cache->get($cacheKey);
+                $force = isset($_GET['forcecache']);
 
-                if ($setlistjson === null) {
+                if ($setlistjson === null || $force) {
                     $url = "https://api.setlist.fm/rest/1.0/setlist/" . $showid;
                     $headers = [
                         'x-api-key: ' . $api_key,
