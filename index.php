@@ -1,5 +1,6 @@
 <?php Kirby::plugin('mirthe/setlist', [
     'options' => [
+        'apiKey' => option('setlistfm.apiKey'),
         'cache' => true
     ],
     'translations' => [
@@ -21,7 +22,7 @@
             ],
             'html' => function($tag) {
                 $showid = $tag->show;
-                $api_key = option('setlistfm.apiKey');
+                $api_key = option('mirthe.setlist.apiKey');
 
                 $cache = kirby()->cache('mirthe.setlist');
                 $cacheKey = 'setlist-' . $showid;
